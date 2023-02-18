@@ -1,0 +1,29 @@
+{%extends "layout.html" %}
+
+{% block content %}
+
+<div class="col-xs-6">
+    {% from "_macros.html" import render_firld%}
+    <form action="/cajasDinamicas" method="POST">
+        {% if vista == 'cajas'%}
+            Cajas:
+            <input type="number" id="cajas" name="cajas">
+            <input type="submit" name="btn" value="Rellenar">
+        {% endif %}
+        {% if vista == 'numeros'%}
+            {% for caja in range(cajas) %}
+                <label for="txt{{caja}}">Número {{ caja + 1 }}:</label>
+                <input type="number" name="cajas">
+            {% endfor %}
+            <input type="submit" name="btn" value="Registrar">
+        {% endif %}
+        {% if vista == 'resultados'%}
+            <p>El número máximo es: {{maxim}}</p>
+            <p>El número mínimo es: {{minim}}</p>
+            <p>El número promedio es: {{prom}}</p>
+            {{textoMostradoDuplicados|safe}}
+        {% endif %}
+    </form>
+</div>
+
+{% endblock %}
