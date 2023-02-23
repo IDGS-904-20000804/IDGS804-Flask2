@@ -1,0 +1,30 @@
+{%extends "layout.html" %}
+
+{% block content %}
+
+<div class="col-xs-6">
+    {% from "_macros.html" import render_firld %}
+    <form action="/traductor" method="POST">
+        <label for="txtSpanish">Español</label>
+        <input type="text" name="txtSpanish" placeholder="Espalol">
+        <label for="txtEnglish">Ingles</label>
+        <input type="text" name="txtEnglish" placeholder="Ingles"><br>
+        
+        <input type="submit" name="btn" value="Guardar">
+        
+        <label for="txtTextToTraslate">Texto</label>
+        <input type="text" name="txtTextToTraslate" placeholder="Texto"><br>
+        <label for="rdLanguageEnglish">Ingles</label>
+        <input type="radio" name="rdLanguage" id="rdLanguageEnglish" value="english">
+        <label for="rdLanguageSpanish">Español</label>
+        <input type="radio" name="rdLanguage" id="rdLanguageSpanish" value="spanish">
+        <br>
+        
+        <input type="submit" name="btn" value="Traducir">
+        {% if vista == 'Traducir'%}
+            <p>{{textTraslated}}</p>
+        {% endif %}
+    </form>
+</div>
+
+{% endblock %}

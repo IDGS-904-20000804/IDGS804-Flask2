@@ -4,13 +4,11 @@
 
 <div>
     {% from "_macros.html" import render_firld%}
-    <form action="/Alumnos" method="post" novalidate>
+    <form action="/cookie" method="post" novalidate>
         <div class="control-group">
             <div class="controls">
-                {{render_firld(form.matricula)}}
-                {{render_firld(form.nombre)}}
-                {{render_firld(form.apaterno)}}
-                {{render_firld(form.email)}}
+                {{render_firld(form.username)}}
+                {{render_firld(form.password)}}
             </div>
         </div>
         <input type="submit" id="al" name="al" value="Registrar">
@@ -19,8 +17,7 @@
 
 {% if vista == 'post' %}
     <div class="col-md-4">
-        <h1>Matricula: {{datos[0]}}</h1>
-        <h1>Nombre: {{datos[1]}}</h1>
+
     </div>
 {% endif %}
 

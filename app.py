@@ -1,12 +1,15 @@
 from flask import Flask, render_template
 from flask import request
 from flask_wtf.csrf import CSRFProtect
+from flask import make_response
+from flask import flash
+import json
 
-import forms, cajasDinamicas
+import forms, cajasDinamicas, traductor
 
 
 app=Flask(__name__)
-app.config['SECRET_KEY']="esta es una clave encriptada"
+# app.config['SECRET_KEY']="esta es una clave encriptada"
 # csrf = CSRFProtect()
 
 
@@ -18,10 +21,28 @@ def formprueba():
 @app.route("/Alumnos", methods=['GET','POST'])
 def Alumnos():
     reg_alum = forms.UserForm(request.form)
-    if request.method == 'POST':
+    datos = list()
+    if request.method == 'POST' and reg_alum.validate():
+        datos.append(reg_alum.matricula.data)
+        datos.append(reg_alum.nombre.data)
         print(reg_alum.matricula.data)
         print(reg_alum.nombre.data)
-    return render_template('Alumnos.html', form = reg_alum)
+        return render_template('Alumnos.html', form = reg_alum, datos = datos, vista = 'post')
+    return render_template('Alumnos.html', form = reg_alum, datos = datos, vista = 'get')
+
+@app.route("/cookie", methods=['GET','POST'])
+def cookie():
+    reg_user = forms.LoginForm(request.form)
+    response = make_response(render_template('cookie.html', form = reg_user))
+    if request.method == 'POST' and reg_user.validate():
+        user = reg_user.username.data
+        password = reg_user.password.data
+        datos = user + '@' + password
+        success_message = 'Bienvenido {0}'.format(user)
+        response.set_cookie('datis_usuario', datos)
+        flash(success_message)
+    return response
+
 
 
 @app.route("/cajasDinamicas", methods=['POST','GET'])
@@ -66,6 +87,43 @@ def CajasDinamicas():
                                 textoMostradoDuplicados = textoMostradoDuplicados,
                                 form = reg_cajasDinamicas)
     return render_template('cajasDinamicas.html', vista = 'cajas')
+
+@app.route("/traductor", methods=['POST','GET'])
+def Traductor():
+    if request.method == 'POST':
+        reg_traductor = traductor.TraslaterForm(request.form)
+        btn = request.form.get("btn")
+        if btn == 'Guardar':
+            spanish = request.form.get("txtSpanish")
+            english = request.form.get("txtEnglish")
+            if spanish == '' or english == '':
+                print('No se han rellenado los archivos')
+            else:
+                texto = ''
+                texto += '[spanish,' + spanish + '],'
+                texto += '[english,' + english + ']'
+                f = open('diccionario.txt', 'a')
+                f.write('\n')
+                f.write(texto)
+                f.close()
+            return render_template('traductor.html',
+                                vista = 'Guardar',
+                                form = reg_traductor)
+        if btn == 'Traducir':
+            textToTraslate = request.form.get("txtTextToTraslate")
+            optionToTraslate = request.form.get("rdLanguage")
+            diccionario = f.readlines()
+            # json_array = json.load(d)
+            # for d in diccionario:
+            #     store_list = []
+            #     [0] español
+            #     [1] ingles
+            textTraslated = 'El texto traducido es: '
+            return render_template('traductor.html',
+                                vista = 'Traducir',
+                                textTraslated = textTraslated,
+                                form = reg_traductor)
+    return render_template('traductor.html')
 
 
 if __name__ == "__main__":
