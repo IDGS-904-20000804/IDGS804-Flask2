@@ -1,5 +1,7 @@
 from wtforms import Form
-from wtforms import StringField, RadioField
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, FieldList, FormField, SelectField, RadioField
+from wtforms.fields import EmailField
 from wtforms import validators
 
 def mi_validacion(form, field):
