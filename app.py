@@ -8,6 +8,91 @@ import ast
 import forms, cajasDinamicas, traductor
 
 
+class Resistencia():
+    colores = [
+        [0, '#000000', 'Negro'],
+        [1, '#A18262', 'Cafe'],
+        [2, '#FF0000', 'Rojo'],
+        [3, '#FF8000', 'Naranja'],
+        [4, '#FFFF00', 'Amarillo'],
+        [5, '#008F39', 'Verde'],
+        [6, '#0000FF', 'Azul'],
+        [7, '#4C2882', 'Violeta'],
+        [8, '#808080', 'Gris'],
+        [9, '#FFFFFF', 'Blanco']
+    ]
+    inputBanda1 = 0
+    hexadecimalBanda1 = ''
+    nombreBanda1 = ''
+    inputBanda2 = 0
+    hexadecimalBanda2 = ''
+    nombreBanda2 = ''
+    inputBanda3 = 0
+    hexadecimalBanda3 = ''
+    nombreBanda3 = ''
+    tol = 0
+    val = 0
+    min = 0
+    max = 0
+
+    def __init__(self, b1, b2, b3, tol):
+        self.inputBanda1 = int(b1)
+        self.inputBanda2 = int(b2)
+        self.inputBanda3 = int(b3)
+        self.tol = float(tol)
+
+    def calcularResistencia(self):
+        self.val = ((self.inputBanda1 * 10) + self.inputBanda2) * (pow(10, self.inputBanda3))
+        self.min = self.val * (1 - self.tol)
+        self.max = self.val * (1 + self.tol)
+        self.hexadecimalBanda1 = self.colores[self.inputBanda1][1]
+        self.nombreBanda1 = self.colores[self.inputBanda1][2]
+        self.hexadecimalBanda2 = self.colores[self.inputBanda2][1]
+        self.nombreBanda2 = self.colores[self.inputBanda2][2]
+        self.hexadecimalBanda3 = self.colores[self.inputBanda3][1]
+        self.nombreBanda3 = self.colores[self.inputBanda3][2]
+        return self.val
+    
+    def getinputBanda1(self):
+        return self.inputBanda1
+    
+    def gethexadecimalBanda1(self):
+        return self.hexadecimalBanda1
+    
+    def getnombreBanda1(self):
+        return self.nombreBanda1
+    
+    def getinputBanda2(self):
+        return self.inputBanda2
+    
+    def gethexadecimalBanda2(self):
+        return self.hexadecimalBanda2
+    
+    def getnombreBanda2(self):
+        return self.nombreBanda2
+    
+    def getinputBanda3(self):
+        return self.inputBanda3
+    
+    def gethexadecimalBanda3(self):
+        return self.hexadecimalBanda3
+    
+    def getnombreBanda3(self):
+        return self.nombreBanda3
+    
+    def getTolerancia(self):
+        return self.tol
+    
+    def getMax(self):
+        return (self.val * (1 + self.tol))
+
+    def getMin(self):
+        return (self.val * (1 - self.tol))
+    
+    def getValue(self):
+        return ((self.inputBanda1 * 10) + self.inputBanda2) * (pow(10, self.inputBanda3))
+
+
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = 'esta es una clave encriptada'
 # csrf = CSRFProtect()
@@ -135,11 +220,9 @@ def Traductor():
                     textoComparado = d[1]
                     if textToTraslate == textoComparado:
                         traduccion = d[0]
-            
             textTraslated = 'No se ha encontrado traducción'
             if traduccion != '':
                 textTraslated = 'El texto traducido es: ' + traduccion
-            
             return render_template('traductor.html',
                                 vista = 'Traducir',
                                 textTraslated = textTraslated,
@@ -147,8 +230,88 @@ def Traductor():
     return render_template('traductor.html')
 
 
+@app.route("/resistencias", methods=['GET','POST'])
+def Resistencias():
+    if request.method == 'POST':
+        btn = request.form.get("btn_submit")
+        if btn == 'Evaluar':
+            ibanda1 = int(request.form.get("banda1"))
+            ibanda2 = int(request.form.get("banda2"))
+            ibanda3 = int(request.form.get("banda3"))
+            tol = float(request.form.get("tolerancia"))
+            val = ((ibanda1 * 10) + ibanda2) * (pow(10, ibanda3))
+            min = val * (1 - tol)
+            max = val * (1 + tol)
+            colores = [
+                [0, '#000000', 'Negro'],
+                [1, '#A18262', 'Cafe'],
+                [2, '#FF0000', 'Rojo'],
+                [3, '#FF8000', 'Naranja'],
+                [4, '#FFFF00', 'Amarillo'],
+                [5, '#008F39', 'Verde'],
+                [6, '#0000FF', 'Azul'],
+                [7, '#4C2882', 'Violeta'],
+                [8, '#808080', 'Gris'],
+                [9, '#FFFFFF', 'Blanco']
+            ]
+            banda1 = {
+                "valor" : colores[ibanda1][0],
+                "color" : colores[ibanda1][1],
+                "nombre" : colores[ibanda1][2]
+            }
+            banda2 = {
+                "valor" : colores[ibanda2][0],
+                "color" : colores[ibanda2][1],
+                "nombre" : colores[ibanda2][2]
+            }
+            banda3 = {
+                "valor" : colores[ibanda3][0],
+                "color" : colores[ibanda3][1],
+                "nombre" : colores[ibanda3][2]
+            }
+            f = open('resisntencias.txt', 'a')
+            texto = str(ibanda1) + '-' + str(ibanda2) + '-' + str(ibanda3) + '-' + str(tol)
+            f.write(texto)
+            f.write('\n')
+
+            return render_template('resistencias.html', 
+                                    banda1 = banda1,
+                                    banda2 = banda2,
+                                    banda3 = banda3,
+                                    tol = tol,
+                                    val = val,
+                                    min = min,
+                                    max = max,
+                                    vista = 'calcular')
+        if btn == 'Mostrar historial':
+            f = open('resisntencias.txt', 'r')
+            resistencias = f.readlines()
+            resistenciasLimpias = []
+            for item in resistencias:
+                realItem = item.replace('\n', '')
+                arrItem = realItem.split('-')
+                resistencia = Resistencia(arrItem[0], arrItem[1], arrItem[2], arrItem[3])
+                valor = resistencia.calcularResistencia()
+                resistenciasLimpias.append([
+                    resistencia.gethexadecimalBanda1(),
+                    resistencia.getnombreBanda1(),
+                    resistencia.gethexadecimalBanda2(),
+                    resistencia.getnombreBanda2(),
+                    resistencia.gethexadecimalBanda3(),
+                    resistencia.getnombreBanda3(),
+                    resistencia.getTolerancia(),
+                    resistencia.getValue(),
+                    resistencia.getMin(),
+                    resistencia.getMax()
+                ])
+            return render_template('resistencias.html',
+                                   vista = 'historial',
+                                   resistencias = resistenciasLimpias)
+    return render_template('resistencias.html', vista = 'bandas')
+
 
 if __name__ == '__main__':
     # csrf.init_app(app)
     app.run(debug=True, port=3000)
     
+

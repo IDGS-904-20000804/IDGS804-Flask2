@@ -1,0 +1,149 @@
+{%extends "layout.html" %}
+
+{% block content %}
+<div class="col-xs-6">
+    {% from "_macros.html" import render_firld%}
+    <form action="/resistencias" method="POST">
+        Banda 1:
+        <select type="number" id="banda1" name="banda1">
+            <option selected disabled>Banda 1...</option>
+            <option value="0">Negro</option>
+            <option value="1">Cafe</option>
+            <option value="2">Rojo</option>
+            <option value="3">Naranja</option>
+            <option value="4">Amarillo</option>
+            <option value="5">Verde</option>
+            <option value="6">Azul</option>
+            <option value="7">Violeta</option>
+            <option value="8">Gris</option>
+            <option value="9">Blanco</option>
+        </select>
+        <br>
+        Banda 2:
+        <select type="number" id="banda2" name="banda2">
+            <option selected disabled>Banda 2...</option>
+            <option value="0">Negro</option>
+            <option value="1">Cafe</option>
+            <option value="2">Rojo</option>
+            <option value="3">Naranja</option>
+            <option value="4">Amarillo</option>
+            <option value="5">Verde</option>
+            <option value="6">Azul</option>
+            <option value="7">Violeta</option>
+            <option value="8">Gris</option>
+            <option value="9">Blanco</option>
+        </select>
+        <br>
+        Banda 3:
+        <select type="number" id="banda3" name="banda3">
+            <option selected disabled>Banda 3...</option>
+            <option value="0">Negro</option>
+            <option value="1">Cafe</option>
+            <option value="2">Rojo</option>
+            <option value="3">Naranja</option>
+            <option value="4">Amarillo</option>
+            <option value="5">Verde</option>
+            <option value="6">Azul</option>
+            <option value="7">Violeta</option>
+            <option value="8">Gris</option>
+            <option value="9">Blanco</option>
+        </select>
+        <br>
+        <br>
+        Tolerancia
+        <br>
+        Dorado
+        <input type="radio" name="tolerancia" value="0.05">
+        <br>
+        Plateado
+        <input type="radio" name="tolerancia" value="0.1">
+        <br>
+        <br>
+        <input type="submit" name="btn_submit" value="Evaluar">
+        <br>
+        <br>
+        {% if vista == 'calcular'%}
+            <table style="border-style: solid; border-color: black;">
+                <thead>
+                    <td style="border-style: solid; border-color: black;">
+                        Banda 1
+                    </td>
+                    <td style="border-style: solid; border-color: black;">
+                        Banda 2
+                    </td>
+                    <td style="border-style: solid; border-color: black;">
+                        Banda 3
+                    </td>
+                    <td style="border-style: solid; border-color: black;">
+                        Tolerancia
+                    </td>
+                    <td style="border-style: solid; border-color: black;">
+                        Valor
+                    </td>
+                    <td style="border-style: solid; border-color: black;">
+                        Mínimo
+                    </td>
+                    <td style="border-style: solid; border-color: black;">
+                        Máximo
+                    </td>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th style="color:white; background-color: {{banda1.color}}; border-style: solid; border-color: black;">{{banda1.nombre}}</th>
+                        <th style="color:white; background-color: {{banda2.color}}; border-style: solid; border-color: black;">{{banda2.nombre}}</th>
+                        <th style="color:white; background-color: {{banda3.color}}; border-style: solid; border-color: black;">{{banda3.nombre}}</th>
+                        <th>{{tol}}</th>
+                        <th>{{val}}</th>
+                        <th>{{min}}</th>
+                        <th>{{max}}</th>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <br>
+            <input type="submit" name="btn_submit" value="Mostrar historial">
+        {% endif %}
+        {% if vista == 'historial'%}
+            <table style="border-style: solid; border-color: black;">
+                <thead>
+                    <td style="border-style: solid; border-color: black;">
+                        Banda 1
+                    </td>
+                    <td style="border-style: solid; border-color: black;">
+                        Banda 2
+                    </td>
+                    <td style="border-style: solid; border-color: black;">
+                        Banda 3
+                    </td>
+                    <td style="border-style: solid; border-color: black;">
+                        Tolerancia
+                    </td>
+                    <td style="border-style: solid; border-color: black;">
+                        Valor
+                    </td>
+                    <td style="border-style: solid; border-color: black;">
+                        Mínimo
+                    </td>
+                    <td style="border-style: solid; border-color: black;">
+                        Máximo
+                    </td>
+                </thead>
+                <tbody>
+                    {% for r in resistencias %}
+                    <tr>
+                        <th style="color:white; background-color: {{r[0]}}; border-style: solid; border-color: black;">{{r[1]}}</th>
+                        <th style="color:white; background-color: {{r[2]}}; border-style: solid; border-color: black;">{{r[3]}}</th>
+                        <th style="color:white; background-color: {{r[4]}}; border-style: solid; border-color: black;">{{r[5]}}</th>
+                        <th style="border-style: solid; border-color: black;">{{r[6]}}</th>
+                        <th style="border-style: solid; border-color: black;">{{r[7]}}</th>
+                        <th style="border-style: solid; border-color: black;">{{r[8]}}</th>
+                        <th style="border-style: solid; border-color: black;">{{r[9]}}</th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </form>
+</div>
+
+{% endblock %}
