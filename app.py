@@ -269,8 +269,21 @@ def Resistencias():
                 "color" : colores[ibanda3][1],
                 "nombre" : colores[ibanda3][2]
             }
+            tolerancia = []
+            if tol == 0.1:
+                tolerancia = {
+                    "valor" : 0.1,
+                    "color" : '#C0C0C0',
+                    "nombre" : 'Plata'
+                }
+            else:
+                tolerancia = {
+                    "valor" : 0.05,
+                    "color" : '#FAFAD2',
+                    "nombre" : 'Dorado'
+                }
             f = open('resisntencias.txt', 'a')
-            texto = str(ibanda1) + '-' + str(ibanda2) + '-' + str(ibanda3) + '-' + str(tol)
+            texto = str(banda1['nombre']) + '-' + str(banda2['nombre']) + '-' + str(banda3['nombre']) + '-' + str(tolerancia['nombre'])
             f.write(texto)
             f.write('\n')
 
@@ -290,7 +303,26 @@ def Resistencias():
             for item in resistencias:
                 realItem = item.replace('\n', '')
                 arrItem = realItem.split('-')
-                resistencia = Resistencia(arrItem[0], arrItem[1], arrItem[2], arrItem[3])
+                colores = {
+                    'Negro': 0,
+                    'Cafe': 1,
+                    'Rojo': 2,
+                    'Naranja': 3,
+                    'Amarillo': 4,
+                    'Verde': 5,
+                    'Azul': 6,
+                    'Violeta': 7,
+                    'Gris': 8,
+                    'Blanco': 9
+                }
+                tolerancias = {
+                    'Plata': 0.1,
+                    'Dorado' : 0.05
+                }
+                resistencia = Resistencia(colores[arrItem[0]],
+                                          colores[arrItem[1]],
+                                          colores[arrItem[2]],
+                                          tolerancias[arrItem[3]])
                 valor = resistencia.calcularResistencia()
                 resistenciasLimpias.append([
                     resistencia.gethexadecimalBanda1(),

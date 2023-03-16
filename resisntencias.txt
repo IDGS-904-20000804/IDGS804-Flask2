@@ -1,11 +1,4 @@
-1-0-1-0.05
-1-0-2-0.1
-1-0-2-0.1
-2-0-3-0.05
-3-0-0-0.05
-1-6-2-0.05
-3-7-1-0.1
-9-9-0-0.05
-2-3-9-0.05
-2-0-1-0.05
-1-1-1-0.05
+Verde-Negro-Negro-Plata
+Cafe-Amarillo-Blanco-Dorado
+Rojo-Negro-Gris-Dorado
+Cafe-Negro-Negro-Dorado
